@@ -29,16 +29,6 @@ This project serves as a template to help you quickly build related AI agent cha
 
 ### Backend Service
 
-```sh
-# Use the uv tool to manage Python dependencies
-pip install uv
-uv sync --frozen
-# Create a Python virtual environment
-source .venv/bin/activate
-# Replace ${workdir} with your own working directory
-cd ${workdir}/backend
-python app/run_server.py
-```
 
 Backend .env file configuration
 Rename .env.example to .env
@@ -71,6 +61,24 @@ EMBEDDING_MODEL=bge-m3
 
 # Relative storage path for ChromaDB
 CHROMA_PATH=resource/chroma_db
+```
+run backend server:
+```sh
+# Use the uv tool to manage Python dependencies
+pip install uv
+
+# Replace ${workdir} with your own working directory
+cd ${workdir}/backend
+
+uv sync --frozen
+# activate a Python virtual environment.
+source .venv/bin/activate
+
+# activate the environment variables on windows
+# .venv/Script/active
+
+#run server
+python app/run_server.py
 ```
 
 ### RAG Deployment

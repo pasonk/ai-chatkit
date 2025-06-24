@@ -28,17 +28,6 @@ ai-chatkit 是一个AI Agent全栈聊天工具，基于langGraph, fastApi, nextj
 ## 快速开始
 ### 后端服务
 
-```sh
-# 使用uv工具来管理python依赖包
-pip install uv
-uv sync --frozen
-# 创建python虚拟环境
-source .venv/bin/activate
-# ${workdir}替换为你自己的工作目录
-cd ${workdir}/backend
-python app/run_server.py
-```
-
 后端.env文件配置
 修改.env.example文件名为.env
 
@@ -71,6 +60,25 @@ EMBEDDING_MODEL=bge-m3
 
 #chromadb的相对存储路径
 CHROMA_PATH=resource/chroma_db
+```
+启动后端服务：
+
+```sh
+# Use the uv tool to manage Python dependencies
+pip install uv
+
+# Replace ${workdir} with your own working directory
+cd ${workdir}/backend
+
+uv sync --frozen
+# activate a Python virtual environment.
+source .venv/bin/activate
+
+# activate the environment variables on windows
+# .venv/Script/active
+
+#run server
+python app/run_server.py
 ```
 
 ### RAG 部署
