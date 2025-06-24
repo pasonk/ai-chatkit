@@ -1,0 +1,6 @@
+/.vscode
+/backend/.venv
+/backend/.env
+
+/frontend/.next
+/frontend/node_modules
