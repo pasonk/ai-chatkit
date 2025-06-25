@@ -1,4 +1,5 @@
 import logging
+from core.config import settings
 from fastapi import APIRouter, status
 from fastapi.exceptions import HTTPException
 from fastapi.responses import StreamingResponse
@@ -64,7 +65,7 @@ async def _handle_input(
     run_id = uuid4()
     thread_id = user_input.thread_id or str(uuid4())
 
-    configurable = {"thread_id": thread_id, "model": DEFAULT_MODEL}
+    configurable = {"thread_id": thread_id, "model": settings.DEFAULT_MODEL}
 
     # 检查 user_input 中的 agent_config 是否存在
     if user_input.agent_config:
