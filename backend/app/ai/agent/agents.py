@@ -3,6 +3,8 @@ from dataclasses import dataclass
 from langgraph.graph.state import CompiledStateGraph
 from pydantic import BaseModel, Field
 from ai.agent.oa_assistant import oa_assistant
+from ai.agent.multi_agent import supervisor_agent
+
 
 DEFAULT_AGENT = "oa-assistant"
 
@@ -26,6 +28,7 @@ class Agent:
 
 agents: dict[str, Agent] = {
     "oa-assistant": Agent(description="A oa intelligent assistant.", graph=oa_assistant),
+    "multi-agent-supervisor": Agent(description="A supervisor for multi-agent assistant.", graph=supervisor_agent),
 }
 
 

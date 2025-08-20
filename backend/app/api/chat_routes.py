@@ -1,3 +1,4 @@
+import langgraph.graph
 import logging
 from core.config import settings
 from fastapi import APIRouter, status
@@ -16,7 +17,6 @@ from ai.models import DEFAULT_MODEL
 from utils.chat_utils import langchain_to_chat_message, remove_tool_calls, convert_message_content_to_string
 from collections.abc import AsyncGenerator
 import json
-
 
 logger = logging.getLogger(__name__)
 
@@ -147,6 +147,22 @@ async def message_generator(
                             new_messages.append(AIMessage(content=interrupt.value))
                         continue
                     update_messages = updates.get("messages", [])
+                    
+                    if node == "supervisor":
+                        # Get only the last ToolMessage since is it added by the
+                        # langgraph lib and not actual AI output so it won't be an
+                        # independent event
+                        if isinstance(update_messages[-1], AIMessage):
+                            update_messages = [update_messages[-1]]
+                        elif isinstance(update_messages[-1], ToolMessage):
+                            if len(update_messages) > 1:
+                                update_messages = [update_messages[-2],update_messages[-1]]
+                            else:
+                                update_messages = [update_messages[-1]]
+                        else:
+                            update_messages = []
+                    if node in ("math_agent", "code_agent"):
+                        update_messages = []
                     new_messages.extend(update_messages)
 
             if stream_mode == "custom":

@@ -54,7 +54,7 @@ def get_model(model_name: AllModelEnum, /) -> ModelT:
 
         return ChatDeepSeek(
             model=api_model_name,
-            temperature=0.1,
+            temperature=0.5,
             streaming=True,
             api_key=settings.DEEPSEEK_API_KEY,
         )

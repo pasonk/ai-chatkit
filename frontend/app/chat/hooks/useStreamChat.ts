@@ -81,14 +81,37 @@ export const useStreamChat = ({
 
   const handleMessageData = (content: any) => {
     if (content.type === "ai" && content.tool_calls.length > 0) {
-      setMessages((prev) =>
-        prev.map((msg, i) =>
+      setMessages((prev) =>{
+        var addCalls = []
+        const calls = prev[prev.length - 1].toolCall?.calls || []
+        const toolCalls = content.tool_calls;
+        if(calls.length === 0){
+          addCalls = toolCalls;
+        }else{
+          calls.map((call) => {
+            for (const toolCall of toolCalls) {
+              if (call.id != toolCall.id) {
+                if(addCalls.find((c) => c.id === toolCall.id) == null){
+                  addCalls.push(toolCall);
+                }
+              }
+            }
+          });
+        }
+        return prev.map((msg, i) =>
           i === prev.length - 1
             ? {
                 ...msg,
-                toolCall: { ...msg.toolCall, calls: content.tool_calls },
+                toolCall: { ...msg.toolCall, calls: [...(msg?.toolCall?.calls || []), ...addCalls] },
               }
             : msg
+        )
+      }
+      );
+    }else if (content.type === "ai" && content.content) {
+      setMessages((prev) =>
+        prev.map((msg, i) =>
+          i === prev.length - 1 ? { ...msg, content: content.content } : msg
         )
       );
     }
