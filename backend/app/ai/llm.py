@@ -2,10 +2,13 @@ from functools import cache
 from typing import TypeAlias
 
 
-from langchain_community.chat_models import FakeListChatModel
+from chromadb.auth import T
+from langchain_community.chat_models import FakeListChatModel, tongyi
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 from langchain_deepseek import ChatDeepSeek
+from langchain_community.chat_models import ChatTongyi
+
 
 
 
@@ -16,6 +19,8 @@ from ai.models import (
     FakeModelName,
     OllamaModelName,
     OpenAIModelName,
+    TongYiModelName,
+
 )
 
 _MODEL_TABLE = {
@@ -24,6 +29,9 @@ _MODEL_TABLE = {
     DeepseekModelName.DEEPSEEK_CHAT: "deepseek-chat",
     OllamaModelName.OLLAMA_GENERIC: "ollama",
     FakeModelName.FAKE: "fake",
+    TongYiModelName.QWEN_PLUS: "qwen-plus",
+
+
 }
 
 
@@ -35,7 +43,7 @@ class FakeToolModel(FakeListChatModel):
         return self
 
 ModelT: TypeAlias = (
-    ChatOpenAI | ChatOllama | ChatDeepSeek | FakeToolModel
+    ChatOpenAI | ChatOllama | ChatDeepSeek | FakeToolModel | ChatTongyi
 )
 
 
@@ -69,3 +77,6 @@ def get_model(model_name: AllModelEnum, /) -> ModelT:
         return chat_ollama
     if model_name in FakeModelName:
         return FakeToolModel(responses=["This is a test response from the fake model."])
+    
+    if model_name in TongYiModelName:
+        return ChatTongyi(model=api_model_name, temperature=0.5, streaming=True)

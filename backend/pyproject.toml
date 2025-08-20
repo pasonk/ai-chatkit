@@ -9,6 +9,7 @@ dependencies = [
     "aiosqlite>=0.21.0",
     "chromadb>=0.6.3",
     "cryptography>=45.0.2",
+    "dashscope>=1.24.2",
     "fastapi[standard]>=0.115.12",
     "langchain>=0.3.25",
     "langchain-chroma>=0.2.3",

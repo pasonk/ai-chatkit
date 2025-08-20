@@ -56,8 +56,8 @@ supervisor = create_supervisor(
         
         Based on the user's question, please select the most appropriate agent to handle the question.
         if the question is about math or programming, please select the math_agent or code_agent, if the question is about other general questions, please select the general_agent.
-        If there are programming issues and math_agent outputs results related to programming, code_agent still needs to be used to re-obtain the result of the programming problem, and the programming result shall be based on the output of code_agent.
-        Finally, the supervisor summarizes the output results.
+        If the agent you manage has already provided the answer, you can directly return the answer without having to think again yourself.
+
         Note: Only one tool can be called at a time; multiple tools cannot be called parallel.
 
         """

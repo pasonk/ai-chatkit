@@ -138,6 +138,7 @@ dependencies = [
     { name = "aiosqlite" },
     { name = "chromadb" },
     { name = "cryptography" },
+    { name = "dashscope" },
     { name = "fastapi", extra = ["standard"] },
     { name = "langchain" },
     { name = "langchain-chroma" },
@@ -162,6 +163,7 @@ requires-dist = [
     { name = "aiosqlite", specifier = ">=0.21.0" },
     { name = "chromadb", specifier = ">=0.6.3" },
     { name = "cryptography", specifier = ">=45.0.2" },
+    { name = "dashscope", specifier = ">=1.24.2" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.12" },
     { name = "langchain", specifier = ">=0.3.25" },
     { name = "langchain-chroma", specifier = ">=0.2.3" },
@@ -429,6 +431,20 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/b9/d4/75d2375a20d80aa262a8adee77bf56950e9292929e394b9fae2481803f11/cryptography-45.0.2-cp37-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:c0c000c1a09f069632d8a9eb3b610ac029fcc682f1d69b758e625d6ee713f4ed", size = 4560535 },
     { url = "https://files.pythonhosted.org/packages/aa/18/c3a94474987ebcfb88692036b2ec44880d243fefa73794bdcbf748679a6e/cryptography-45.0.2-cp37-abi3-win32.whl", hash = "sha256:08281de408e7eb71ba3cd5098709a356bfdf65eebd7ee7633c3610f0aa80d79b", size = 2922045 },
     { url = "https://files.pythonhosted.org/packages/63/63/fb28b30c144182fd44ce93d13ab859791adbf923e43bdfb610024bfecda1/cryptography-45.0.2-cp37-abi3-win_amd64.whl", hash = "sha256:48caa55c528617fa6db1a9c3bf2e37ccb31b73e098ac2b71408d1f2db551dde4", size = 3393321 },
+]
+
+[[package]]
+name = "dashscope"
+version = "1.24.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "cryptography" },
+    { name = "requests" },
+    { name = "websocket-client" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1f/5d/5f13af8659cde5ac488af3a221bc5d051e3014865c0d69723cb8907f6649/dashscope-1.24.2-py3-none-any.whl", hash = "sha256:0d48b76928811dcb44a3048ec9122e147a223179cb6367a8d8ed009c7033089a", size = 1301204 },
 ]
 
 [[package]]

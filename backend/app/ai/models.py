@@ -22,10 +22,19 @@ class OllamaModelName(StrEnum):
 class FakeModelName(StrEnum):
     """Fake model for testing."""
     FAKE = "fake"
+    
+class TongYiModelName(StrEnum):
+    """TongYi model"""
+    QWEN_PLUS = "qwen-plus"
+    QWEN_MAX = "qwen-max"
+    
+
+
 
 AllModelEnum: TypeAlias = (
     OpenAIModelName
     | DeepseekModelName
     | OllamaModelName
     | FakeModelName
+    | TongYiModelName
 )
