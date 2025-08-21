@@ -31,8 +31,9 @@ agents: dict[str, Agent] = {
     "multi-agent-supervisor": Agent(description="A supervisor for multi-agent assistant.", graph=supervisor_agent),
 }
 
-
+## Get agent by agent_id
 def get_agent(agent_id: str) -> CompiledStateGraph:
+    """Get agent by agent_id"""
     return agents[agent_id].graph
 
 

@@ -6,10 +6,10 @@ from db.models.base import DBBaseModel
 @dataclass
 class Department(DBBaseModel, table=True):
     """
-    部门表
+    department model
     """
     __tablename__ = "department"
-    id: int = Field(primary_key=True, index=True, description="部门id")
-    name: str = Field(max_length=50, description="部门名称")
-    parent_id: int = Field(default=0, description="父部门id")
-    manager_id: int = Field(default=0, description="部门负责人id")
+    id: int = Field(primary_key=True, index=True, description="department id")
+    name: str = Field(max_length=50, description="department name")
+    parent_id: int = Field(default=0, description="parent department id")
+    manager_id: int = Field(default=0, description="department manager id")

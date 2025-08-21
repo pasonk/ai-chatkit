@@ -47,8 +47,17 @@ ModelT: TypeAlias = (
 )
 
 
+
 @cache
 def get_model(model_name: AllModelEnum, /) -> ModelT:
+    """
+    Get model by model name.
+    Args:
+        model_name: Model name.
+    Returns:
+        Model instance.
+    """
+
     
     api_model_name = _MODEL_TABLE.get(model_name)
     if not api_model_name:

@@ -6,7 +6,6 @@ from langchain_chroma import Chroma
 from core.config import settings
 from chromadb.api.shared_system_client import SharedSystemClient
 
-# SharedSystemClient.clear_system_cache()
 
 client = chromadb.PersistentClient(path=settings.CHROMA_PATH,settings=Settings(anonymized_telemetry=False))
 #

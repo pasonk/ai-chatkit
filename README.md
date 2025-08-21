@@ -11,6 +11,7 @@ This project serves as a template to help you quickly build related AI agent cha
 <img src="./pictures/chat_img.png" width="700"/>  
 
 multi-agent:
+
 <img src="./pictures/chat_multi_agent_img.png" width="700"/>
 
 

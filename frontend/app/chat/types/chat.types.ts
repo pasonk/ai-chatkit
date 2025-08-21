@@ -1,4 +1,4 @@
-// 消息类型定义
+// Chat message type
 export interface Message {
   id: string;
   type: "user" | "ai" | "tool";
@@ -6,7 +6,7 @@ export interface Message {
   toolCall?: { calls: any[] };
 }
 
-// Chat组件props类型
+// Chat component props
 export interface ChatComponentProps {
   threadId: string;
 }

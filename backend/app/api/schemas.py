@@ -1,5 +1,5 @@
 """
-API数据模型定义
+API data model definition
 """
 
 from pydantic import BaseModel

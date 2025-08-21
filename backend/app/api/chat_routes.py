@@ -1,4 +1,3 @@
-import langgraph.graph
 import logging
 from core.config import settings
 from fastapi import APIRouter, status
@@ -13,7 +12,6 @@ from api.schema.chatSchema import UserInput, ChatMessage, StreamInput
 from asyncio import CancelledError
 from ai.agent.agents import get_agent, DEFAULT_AGENT, CompiledStateGraph
 from typing import Any, Union, Dict, List, Optional
-from ai.models import DEFAULT_MODEL
 from utils.chat_utils import langchain_to_chat_message, remove_tool_calls, convert_message_content_to_string
 from collections.abc import AsyncGenerator
 import json
@@ -26,10 +24,10 @@ chat_router = APIRouter(prefix="/chat", tags=["chat"],)
 @chat_router.post("/invoke")
 async def invoke(user_input: UserInput) -> ChatMessage:
     """
-    使用用户输入调用一个代理以获取最终响应。
+    Use user input to invoke a proxy to get the final response.
 
-    如果未提供 agent_id，则将使用默认代理。
-    使用 thread_id 来持久化并继续多轮对话。run_id 关键字参数也会附加到消息中，用于记录反馈。
+    If no agent_id is provided, the default proxy will be used.
+    Use thread_id to persist and continue multi-turn dialogues. The run_id keyword argument will also be attached to the message for recording feedback.
     """
     agent: CompiledStateGraph = get_agent(user_input.agent_id)
     
@@ -54,6 +52,20 @@ async def invoke(user_input: UserInput) -> ChatMessage:
     except Exception as e:
         logger.error(f"An exception occurred: {e}")
         raise HTTPException(status_code=500, detail="Unexpected error")
+    
+    
+@chat_router.post("/stream", response_class=StreamingResponse, responses=_sse_response_example())
+async def stream(user_input: StreamInput) -> StreamingResponse:
+    """
+    流式传输代理的响应。
+    
+    """
+
+    return StreamingResponse(
+        message_generator(user_input),
+        media_type="text/event-stream",
+    )
+
 
 async def _handle_input(
     user_input: UserInput, agent: CompiledStateGraph
@@ -67,17 +79,17 @@ async def _handle_input(
 
     configurable = {"thread_id": thread_id, "model": settings.DEFAULT_MODEL}
 
-    # 检查 user_input 中的 agent_config 是否存在
+    # Check whether agent_config exists in user_input
     if user_input.agent_config:
-        # 找出 configurable 字典的键和 user_input.agent_config 字典的键的交集
+        # Find the intersection of the keys in the configurable dictionary and the keys in the user_input.agent_config dictionary
         overlap = configurable.keys() & user_input.agent_config.keys()
         if overlap:
-            # 如果存在交集，说明 agent_config 包含了保留键，抛出 HTTP 异常
+            # If there is an intersection, it means that agent_config contains reserved keys, throw an HTTP exception
             raise HTTPException(
                 status_code=422,
                 detail=f"agent_config contains reserved keys: {overlap}",
             )
-    # 如果没有交集，将 user_input.agent_config 的内容更新到 configurable 字典中
+    # If there is no intersection, update the content of user_input.agent_config to the configurable dictionary
     configurable.update(user_input.agent_config)
 
     config = RunnableConfig(
@@ -122,13 +134,12 @@ async def message_generator(
     user_input: StreamInput
 ) -> AsyncGenerator[str, None]:
     """
-    生成消息的异步生成器，用于流式传输代理的响应。
+    An asynchronous generator for generating messages, used for the responses of streaming agents.
     """
     agent: CompiledStateGraph = get_agent(user_input.agent_id)
     kwargs, run_id = await _handle_input(user_input, agent)
 
     try:
-        # Process streamed events from the graph and yield messages over the SSE stream.
         async for stream_event in agent.astream(
             **kwargs, stream_mode=["updates", "messages", "custom"]
         ):
@@ -139,19 +150,15 @@ async def message_generator(
             if stream_mode == "updates":
                 for node, updates in event.items():
                     # A simple approach to handle agent interrupts.
-                    # In a more sophisticated implementation, we could add
-                    # some structured ChatMessage type to return the interrupt value.
                     if node == "__interrupt__":
                         interrupt: Interrupt
                         for interrupt in updates:
                             new_messages.append(AIMessage(content=interrupt.value))
                         continue
                     update_messages = updates.get("messages", [])
-                    
+ 
+                     # Only retain the output of "supervisor"
                     if node == "supervisor":
-                        # Get only the last ToolMessage since is it added by the
-                        # langgraph lib and not actual AI output so it won't be an
-                        # independent event
                         if isinstance(update_messages[-1], AIMessage):
                             update_messages = [update_messages[-1]]
                         elif isinstance(update_messages[-1], ToolMessage):
@@ -176,7 +183,6 @@ async def message_generator(
                     logger.error(f"Error parsing message: {e}")
                     yield f"data: {json.dumps({'type': 'error', 'content': 'Unexpected error'})}\n\n"
                     continue
-                # LangGraph re-sends the input message, which feels weird, so drop it
                 if chat_message.type == "human" and chat_message.content == user_input.message:
                     continue
                 yield f"data: {json.dumps({'type': 'message', 'content': chat_message.model_dump()})}\n\n"
@@ -187,15 +193,11 @@ async def message_generator(
                 msg, metadata = event
                 if "skip_stream" in metadata.get("tags", []):
                     continue
-                # For some reason, astream("messages") causes non-LLM nodes to send extra messages.
-                # Drop them.
+
                 if not isinstance(msg, AIMessageChunk):
                     continue
                 content = remove_tool_calls(msg.content)
                 if content:
-                    # Empty content in the context of OpenAI usually means
-                    # that the model is asking for a tool to be invoked.
-                    # So we only print non-empty content.
                     yield f"data: {json.dumps({'type': 'token', 'content': convert_message_content_to_string(content)})}\n\n"
     except GeneratorExit:
         # Handle GeneratorExit gracefully
@@ -212,14 +214,3 @@ async def message_generator(
         yield f"data: {json.dumps({'type': 'end'})}\n\n"
 
 
-@chat_router.post("/stream", response_class=StreamingResponse, responses=_sse_response_example())
-async def stream(user_input: StreamInput) -> StreamingResponse:
-    """
-    流式传输代理的响应。
-    
-    """
-
-    return StreamingResponse(
-        message_generator(user_input),
-        media_type="text/event-stream",
-    )

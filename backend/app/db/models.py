@@ -1,5 +1,6 @@
 """
-数据库模型定义
+database models
+
 """
 
 from sqlalchemy import Column, Integer, String

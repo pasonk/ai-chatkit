@@ -5,8 +5,8 @@ from langgraph.checkpoint.memory import InMemorySaver
 from langgraph_supervisor.handoff import create_forward_message_tool
 
 
-from dotenv import load_dotenv  # 用于加载环境变量
-load_dotenv()  # 加载 .env 文件中的环境变量
+from dotenv import load_dotenv
+load_dotenv()
 
 from langchain.globals import set_debug
 from langchain.globals import set_verbose
@@ -15,7 +15,7 @@ set_debug(True)
 set_verbose(False)
 
 model = get_model(settings.DEFAULT_MODEL)
-
+#  Agent
 math_agent = create_react_agent(
     model=model,
     prompt="You are a math expert, calculating step by step and answering users' math questions, don't answer questions related to programming",
@@ -23,7 +23,7 @@ math_agent = create_react_agent(
     name="math_agent"
 ).with_config(tags=["skip_stream"])
 
-# 编程专家智能体
+# Programming expert agent
 code_agent = create_react_agent(
     model=model,
     prompt="You are a programming expert. Solve users' programming problems, don't answer questions related to math",
@@ -31,7 +31,7 @@ code_agent = create_react_agent(
     name="code_agent"
 ).with_config(tags=["skip_stream"])
 
-# 通用智能体
+# General agent
 general_agent = create_react_agent(
     model=model,
     prompt="You are a universal assistant. Answer all questions from users except those related to math and programming",
@@ -41,11 +41,11 @@ general_agent = create_react_agent(
 
 forwarding_tool = create_forward_message_tool("supervisor") # The argument is the name to assign to the resulting forwarded message
 
-# 创建一个监督者
+# Create a supervisor
 supervisor = create_supervisor(
     agents=[general_agent, code_agent, math_agent],
     model=model,
-    # full_history 全消息记录，last_message 最后智能体的输出
+    # full_history full message record, last_message output of the last agent
     output_mode="last_message",
     prompt=(
        """

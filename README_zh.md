@@ -11,18 +11,27 @@ ai-chatkit 是一个AI Agent全栈聊天工具，基于langGraph, fastApi, nextj
 <img src="./pictures/chat_img.png" width="700"/>  
 
 多智能体聊天:
+
 <img src="./pictures/chat_multi_agent_img.png" width="700"/>
 
 ## 特性
 
 1、基于langGraph框架搭建的智能体聊天应用，支持自定义智能体的行为逻辑编排。
+
 2、支持自定义智能体的知识库问答能力，基于ChromaDB来存储和查询知识库。
+
 3、支持自定义智能体的工具调用
+
 4、Python后端接口API，基于FastAPI来实现，支持全异步调用。
+
 5、支持自定义智能体的前端应用，基于NextJS来实现。
+
 6、支持聊天Streaming流输出，前端支持SSE流输出。
+
 7、支持自定义多个智能体
+
 8、支持多智能体协作
+
 9、聊天历史记录保存在本地浏览器缓存中
 
 
@@ -109,10 +118,11 @@ pnpm dev
 在前端你可以切换不同的智能体进行对话
 
 本项目自带以下智能体：
-1、OA-ASSISTANT，主要用于演示OA助手智能体，支持员工信息查询和员工手册知识库检索
+
+1、OA-ASSISTANT：主要用于演示OA助手智能体，支持员工信息查询和员工手册知识库检索
 具体可以参考：backend/app/ai/agent/oa_assistant.py  
 
-2、MULTI_AGENT，主要用于演示多智能体协作智能体，支持多个智能体之间的协作，multi_agent包含三个智能体：
+2、MULTI_AGENT：主要用于演示多智能体协作智能体，支持多个智能体之间的协作，multi_agent包含三个智能体：
     1）math_agent ：数学智能体, 主要用于处理数学计算
     2）code_agent ：代码智能体，主要用于处理代码生成
     3）general_agent  ：通用智能体，主要用于处理通用问题

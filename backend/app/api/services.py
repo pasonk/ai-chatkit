@@ -1,5 +1,5 @@
 """
-API业务逻辑处理
+API business logic processing
 """
 
 from sqlalchemy.orm import Session
@@ -7,11 +7,11 @@ from . import schemas
 from ..db import models
 
 def create_user(db: Session, user: schemas.UserCreate):
-    """创建用户"""
+    """ create a new user"""
     db_user = models.User(
         username=user.username,
         email=user.email,
-        hashed_password=user.password + "_hashed"  # 示例哈希处理
+        hashed_password=user.password + "_hashed" 
     )
     db.add(db_user)
     db.commit()

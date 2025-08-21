@@ -7,7 +7,7 @@ from sqlmodel import Field
 
 class DBBaseModel(SQLModel):
     """
-    DB基础模型
+    DB base model
     """
     create_time: datetime | None = Field(default=datetime.now, title="创建时间")
     edit_time: datetime | None = Field(default=datetime.now, title="更新时间")

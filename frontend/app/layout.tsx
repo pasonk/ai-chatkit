@@ -14,7 +14,7 @@ import SiderComponent from './components/SiderComponent';
 
 const { Header, Content } = Layout;
 
-// 由于 ReactNode 可能无法正常导入，使用更通用的类型 any 替代
+  // Since ReactNode may not be imported correctly, use the more generic type 'any' instead
 export default function RootLayout({ children }: { children: any }) {
   const [collapsed, setCollapsed] = useState(false);
   const [sessions, setSessions] = useState(() => {
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: any }) {
   const [agentId, setAgentId] = useState("oa-assistant");
 
 
-  //监听new-chat事件
+  //listen new-chat event
   useEffect(() => {
     const addSession = (event: CustomEvent) => {
       const { threadId, msg } = event.detail;
@@ -55,7 +55,7 @@ export default function RootLayout({ children }: { children: any }) {
       name: startMsg.substring(0, 10),
       lastUpdated: Date.now(),
     };
-    // 左边栏的会话列表自动选择新会话
+    // left sider auto select new session
     setSessions((prev) => [...prev, newSession]);
     setCurrentThreadId(newThreadId);
     localStorage.setItem(
@@ -65,7 +65,7 @@ export default function RootLayout({ children }: { children: any }) {
     window.history.pushState({}, "", `/chat/${newThreadId}`);
   };
 
-  // 删除会话处理函数
+  // delete session
   const handleDeleteSession = (delThreadId: string) => {
     const newSessions = sessions.filter(
       (session) => session.threadId !== delThreadId
